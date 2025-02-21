@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import SkeletonLoader from "../components/SkeletonLoaderDetailsPage"; // Import SkeletonLoader
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -19,13 +20,55 @@ const ProductDetails = () => {
   }, [id]);
 
   if (loading)
-    return <p className="text-center text-lg font-bold mt-10">Loading...</p>;
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* Skeleton Loader for Image and Details */}
+        <div className="grid md:grid-cols-2 gap-10">
+          <div>
+            <SkeletonLoader type="image" />
+            <div className="flex overflow-x-auto space-x-2 mt-4 p-2">
+              <SkeletonLoader type="image" />
+              <SkeletonLoader type="image" />
+              <SkeletonLoader type="image" />
+            </div>
+          </div>
+
+          <div>
+            <SkeletonLoader type="title" className="mb-4" />
+            <SkeletonLoader type="paragraph" />
+            <div className="flex items-center mt-3 space-x-3">
+              <SkeletonLoader type="paragraph" />
+              <SkeletonLoader type="badge" />
+            </div>
+            <SkeletonLoader type="paragraph" className="mt-4" />
+            <SkeletonLoader type="button" className="mt-5" />
+          </div>
+        </div>
+
+        {/* Skeleton Loader for Product Details */}
+        <div className="mt-12 p-6 bg-gray-100 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800">Product Details</h2>
+          <div className="grid md:grid-cols-3 gap-6 mt-4">
+            <SkeletonLoader type="smallBox" />
+            <SkeletonLoader type="smallBox" />
+            <SkeletonLoader type="smallBox" />
+          </div>
+        </div>
+
+        {/* Skeleton Loader for Customer Reviews */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold text-gray-800">Customer Reviews</h2>
+          <div className="mt-4 grid md:grid-cols-2 gap-6">
+            <SkeletonLoader type="gridItem" />
+            <SkeletonLoader type="gridItem" />
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-     
       <div className="grid md:grid-cols-2 gap-10">
-       
         <div>
           <img
             src={selectedImage}
@@ -47,12 +90,10 @@ const ProductDetails = () => {
           </div>
         </div>
 
-      
         <div>
           <h1 className="text-3xl font-bold text-gray-800">{product.title}</h1>
           <p className="text-gray-500 text-lg">{product.brand}</p>
 
-          
           <div className="flex items-center mt-3 space-x-3">
             <p className="text-2xl font-bold text-purple-600">${product.price}</p>
             <span className="bg-red-500 text-white px-3 py-1 rounded-md text-sm">
@@ -60,10 +101,8 @@ const ProductDetails = () => {
             </span>
           </div>
 
-          
           <p className="mt-4 text-gray-600 leading-relaxed">{product.description}</p>
 
-          
           <p
             className={`mt-3 px-3 py-1 inline-block rounded-md text-sm font-semibold ${
               product.stock > 5 ? "bg-green-500 text-white" : "bg-red-500 text-white"
@@ -72,7 +111,6 @@ const ProductDetails = () => {
             {product.stock > 5 ? "In Stock" : "Low Stock"}
           </p>
 
-          
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-700">Tags:</h3>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -88,14 +126,12 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          
           <button className="mt-5 w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-transform transform hover:scale-105 duration-300 shadow-lg">
             Buy Now
           </button>
         </div>
       </div>
 
-   
       <div className="mt-12 p-6 bg-gray-100 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold text-gray-800">Product Details</h2>
         <div className="grid md:grid-cols-3 gap-6 mt-4">
@@ -105,7 +141,6 @@ const ProductDetails = () => {
         </div>
       </div>
 
-    
       <div className="mt-10">
         <h2 className="text-2xl font-bold text-gray-800">Customer Reviews</h2>
         {product.reviews?.length > 0 ? (

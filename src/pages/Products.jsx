@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory, setSortOrder, setSearchQuery } from "../redux/filterslice";
+import SkeletonLoader from "../components/SkeletonLoader"; // Import SkeletonLoader
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -108,20 +109,27 @@ const Products = () => {
       </div>
 
       {filteredProducts.length === 0 ? (
-        <div className="text-center text-gray-500 text-xl font-semibold mt-10">
-          No products found...
-        </div>
+        <SkeletonLoader /> // Display skeleton loader when no products are found
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {currentProducts.map((product) => (
-            <div key={product.id} className="bg-white shadow-blue-700 rounded-lg p-4 hover:shadow-xl transition duration-300">
-              <img src={product.thumbnail} alt={product.title} className="h-32 w-full object-contain mb-4 rounded-md" />
+            <div
+              key={product.id}
+              className="bg-white shadow-blue-700 rounded-lg p-4 hover:shadow-xl transition duration-300"
+            >
+              <img
+                src={product.thumbnail}
+                alt={product.title}
+                className="h-32 w-full object-contain mb-4 rounded-md"
+              />
               <h2 className="text-lg font-semibold truncate">{product.title}</h2>
               <p className="text-gray-500 text-sm">{product.brand}</p>
               <p className="text-xl font-bold mt-2">${product.price}</p>
               <div className="flex items-center mt-2">
                 <span className="text-yellow-400 text-sm font-bold">{product.rating} ★</span>
-                <span className={`ml-2 text-xs px-2 py-1 rounded-full ${product.stock > 5 ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                <span
+                  className={`ml-2 text-xs px-2 py-1 rounded-full ${product.stock > 5 ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
+                >
                   {product.stock > 5 ? "In Stock" : "Low Stock"}
                 </span>
               </div>
