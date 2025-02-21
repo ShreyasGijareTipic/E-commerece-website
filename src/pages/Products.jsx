@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategory, setSortOrder, setSearchQuery } from "../redux/filterslice";
-import SkeletonLoader from "../components/SkeletonLoader"; // Import SkeletonLoader
+import SkeletonLoader from "../components/SkeletonLoader"; 
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -15,7 +15,7 @@ const Products = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("https://dummyjson.com/products?limit=100")
+    fetch("https://dummyjson.com/products?limit=0")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products || []);
@@ -109,7 +109,7 @@ const Products = () => {
       </div>
 
       {filteredProducts.length === 0 ? (
-        <SkeletonLoader /> // Display skeleton loader when no products are found
+        <SkeletonLoader />
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {currentProducts.map((product) => (

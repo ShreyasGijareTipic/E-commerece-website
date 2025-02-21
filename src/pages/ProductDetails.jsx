@@ -22,7 +22,7 @@ const ProductDetails = () => {
   if (loading)
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Skeleton Loader for Image and Details */}
+       
         <div className="grid md:grid-cols-2 gap-10">
           <div>
             <SkeletonLoader type="image" />
@@ -45,7 +45,7 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        {/* Skeleton Loader for Product Details */}
+        
         <div className="mt-12 p-6 bg-gray-100 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold text-gray-800">Product Details</h2>
           <div className="grid md:grid-cols-3 gap-6 mt-4">
@@ -55,7 +55,7 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        {/* Skeleton Loader for Customer Reviews */}
+        
         <div className="mt-10">
           <h2 className="text-2xl font-bold text-gray-800">Customer Reviews</h2>
           <div className="mt-4 grid md:grid-cols-2 gap-6">
