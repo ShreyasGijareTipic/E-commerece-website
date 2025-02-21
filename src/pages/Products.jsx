@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategory, setSortOrder, setSearchQuery } from "../redux/filterslice";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const { selectedCategory, sortOrder, searchQuery } = useSelector((state) => state.filters);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const Products = () => {
 
   const handleSearch = (e) => {
     const query = e.target.value;
-    setSearchQuery(query);
+    dispatch(setSearchQuery(query));
 
     if (query.length > 2) {
       fetch(`https://dummyjson.com/products/search?q=${query}`)
@@ -85,7 +86,7 @@ const Products = () => {
         <select
           className="p-2 border rounded-lg bg-white w-full sm:w-1/4"
           value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
+          onChange={(e) => dispatch(setCategory(e.target.value))}
         >
           <option value="">All Categories</option>
           {categories.map((category, index) => (
@@ -98,7 +99,7 @@ const Products = () => {
         <select
           className="p-2 border rounded-lg bg-white w-full sm:w-1/4"
           value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
+          onChange={(e) => dispatch(setSortOrder(e.target.value))}
         >
           <option value="">Sort by Price</option>
           <option value="low-high">Low to High</option>
@@ -106,10 +107,9 @@ const Products = () => {
         </select>
       </div>
 
-     
       {filteredProducts.length === 0 ? (
         <div className="text-center text-gray-500 text-xl font-semibold mt-10">
-           No products found...
+          No products found...
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
@@ -125,8 +125,8 @@ const Products = () => {
                   {product.stock > 5 ? "In Stock" : "Low Stock"}
                 </span>
               </div>
-              <button 
-                onClick={() => handleRoute(product.id)} 
+              <button
+                onClick={() => handleRoute(product.id)}
                 className="mt-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-transform transform hover:scale-105 duration-300 w-full shadow-md"
               >
                 View Details
@@ -136,63 +136,56 @@ const Products = () => {
         </div>
       )}
 
-      {filteredProducts.length > itemsPerPage && (<div className="flex justify-center mt-6 space-x-2 flex-wrap">
-    
-    <button
-      className="px-4 py-2 bg-gray-300 rounded-lg disabled:opacity-50"
-      disabled={currentPage === 1}
-      onClick={() => setCurrentPage(currentPage - 1)}
-    >
-      Previous
-    </button>
+      {filteredProducts.length > itemsPerPage && (
+        <div className="flex justify-center mt-6 space-x-2 flex-wrap">
+          <button
+            className="px-4 py-2 bg-gray-300 rounded-lg disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Previous
+          </button>
 
-    
-    <span className="px-3 py-2 md:hidden bg-blue-500 text-white rounded-lg">
-      {currentPage}
-    </span>
+          <span className="px-3 py-2 md:hidden bg-blue-500 text-white rounded-lg">
+            {currentPage}
+          </span>
 
-   
-    <div className="hidden md:flex space-x-2">
-      {[...Array(totalPages)].map((_, index) => {
-        const pageNumber = index + 1;
-        if (
-          pageNumber === 1 || 
-          pageNumber === totalPages || 
-          (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
-        ) {
-          return (
-            <button
-              key={pageNumber}
-              className={`px-3 py-2 rounded-lg ${
-                currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-300"
-              }`}
-              onClick={() => setCurrentPage(pageNumber)}
-            >
-              {pageNumber}
-            </button>
-          );
-        } else if (
-          (pageNumber === currentPage - 2 && currentPage > 3) ||
-          (pageNumber === currentPage + 2 && currentPage < totalPages - 2)
-        ) {
-          return <span key={pageNumber} className="px-3 py-2">...</span>;
-        }
-        return null;
-      })}
-    </div>
+          <div className="hidden md:flex space-x-2">
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNumber = index + 1;
+              if (
+                pageNumber === 1 ||
+                pageNumber === totalPages ||
+                (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+              ) {
+                return (
+                  <button
+                    key={pageNumber}
+                    className={`px-3 py-2 rounded-lg ${currentPage === pageNumber ? "bg-blue-500 text-white" : "bg-gray-300"}`}
+                    onClick={() => setCurrentPage(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              } else if (
+                (pageNumber === currentPage - 2 && currentPage > 3) ||
+                (pageNumber === currentPage + 2 && currentPage < totalPages - 2)
+              ) {
+                return <span key={pageNumber} className="px-3 py-2">...</span>;
+              }
+              return null;
+            })}
+          </div>
 
-    
-    <button
-      className="px-4 py-2 bg-gray-300 rounded-lg disabled:opacity-50"
-      disabled={currentPage === totalPages}
-      onClick={() => setCurrentPage(currentPage + 1)}
-    >
-      Next
-    </button>
-  </div>
-)}
-
-
+          <button
+            className="px-4 py-2 bg-gray-300 rounded-lg disabled:opacity-50"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
